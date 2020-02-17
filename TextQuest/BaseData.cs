@@ -8,19 +8,54 @@ namespace TextQuest
 {
     class BaseData
     {
+        interface ITimeDependent
+        {
+            void NewDay();
+        }
+
+        interface IEffect : IHaveInfo
+        {
+            void Run();
+            void Stop();
+            Character Owner { get; set; }
+        }
+
+        interface TimeEffect : IEffect, ITimeDependent
+        {
+            bool Condition();
+        }
+
+        class Effects : List<IEffect>
+        {
+
+        }
+
+        class DayCircle
+        {
+            List<ITimeDependent> TimeDependents = new List<ITimeDependent>();
+            void Update()
+            {
+                for (int i = 0; i < TimeDependents.Count; i++)
+                {
+                    TimeDependents[i].NewDay();
+                }
+            }
+        }
+
         const int ExpForLevel = 1000;
 
         public interface IHaveInfo
         {
-            string Title();
-            //string Rank();
+            string Title { get; }
+            //string Rank() { get; set; }
+            //string About() { get; }
         }
 
         public static Random rnd = new Random();
 
         public abstract class Character : IHaveInfo
         {
-            public virtual string Title() => "Персонаж";
+            public virtual string Title => "Персонаж";
             public int Health;
             public abstract void GetDamage(Damage damage);
             public abstract void Die();
@@ -34,6 +69,7 @@ namespace TextQuest
             {
                 get => Exp / ExpForLevel;
             }
+            public int Speed;
         }
 
         public abstract class Armor : Item
@@ -96,32 +132,39 @@ namespace TextQuest
             {
                 Bag = new Bag(100);
                 Exp = 0;
+                Speed = 10;
             }
-            public override string Title() => "Герой";
+            public override string Title => "Герой";
             public readonly Bag Bag;
             override public void GetDamage(Damage damage) { }
             public override void Die()
             {
                 throw new NotImplementedException();
             }
-            int Speed = 10;
         }
 
         public interface ISkill
         {
             string Name { get; set; }
-            void Use();
+            void Use(Character character);
         }
 
-        public class Scroll
-        { }
+        public class Scroll : Item
+        {
+        
+        }
+
+        public class Food : Item
+        { 
+        
+        }
 
         abstract public class Item : IHaveInfo
         {
             public int Weight;
             public string Name;
             public string ClassName;
-            public virtual string Title() => "Предмет";
+            public virtual string Title => "Предмет";
         }
 
         public class Bag : List<Item>
@@ -164,9 +207,8 @@ namespace TextQuest
             public int Accuracy;
         }
 
-        public interface Event
+        public interface Event : IHaveInfo
         {
-            string Title { get; }
             void ItsHappend();
         }
     }
