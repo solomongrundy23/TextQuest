@@ -13,11 +13,15 @@ namespace TextQuest
             void NewDay();
         }
 
-        interface IEffect : IHaveInfo
+        interface Magic : IHaveInfo
+        {
+            void Use();
+        }
+
+        public interface IEffect : IHaveInfo
         {
             void Run();
             void Stop();
-            Character Owner { get; set; }
         }
 
         interface TimeEffect : IEffect, ITimeDependent
@@ -25,7 +29,7 @@ namespace TextQuest
             bool Condition();
         }
 
-        class Effects : List<IEffect>
+        public class Effects : List<IEffect>
         {
 
         }
@@ -55,6 +59,7 @@ namespace TextQuest
 
         public abstract class Character : IHaveInfo
         {
+            public string Name;
             public virtual string Title => "Персонаж";
             public int Health;
             public abstract void GetDamage(Damage damage);
@@ -63,8 +68,7 @@ namespace TextQuest
             public Weapon Weapon;
             public Armor Armor;
             public int Exp;
-            public bool Frozen;
-            public bool Poisoned;
+            public readonly Effects Effects = new Effects();
             public int Level
             {
                 get => Exp / ExpForLevel;
@@ -75,7 +79,7 @@ namespace TextQuest
         public abstract class Armor : Item
         {
             Damage Damage;
-            public override string Title() => "Броня";
+            public override string Title => "Броня";
         }
 
         public class Range
@@ -201,7 +205,7 @@ namespace TextQuest
 
         public abstract class Weapon : Item
         {
-            public override string Title() => "Оружие";
+            public override string Title => "Оружие";
             public virtual void Hit() { }
             public Damage Damage;
             public int Accuracy;
