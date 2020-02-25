@@ -8,12 +8,27 @@ namespace TextQuest
 {
     class BaseData
     {
-        interface ITimeDependent
+        public abstract class HaveLevel
+        {
+            public int Expire;
+            public int Level
+            {
+                get => Expire / 5000;
+            }
+        }
+
+        public interface ITimeDependent
         {
             void NewDay();
         }
 
-        interface Magic : IHaveInfo
+        public interface IEvent
+        {
+            bool ItsHappend();
+            void Execute();
+        }
+
+        public interface Magic : IHaveInfo
         {
             void Use();
         }
@@ -24,7 +39,7 @@ namespace TextQuest
             void Stop();
         }
 
-        interface TimeEffect : IEffect, ITimeDependent
+        public interface TimeEffect : IEffect, ITimeDependent
         {
             bool Condition();
         }
@@ -34,7 +49,7 @@ namespace TextQuest
 
         }
 
-        class DayCircle
+        public class DayCircle
         {
             List<ITimeDependent> TimeDependents = new List<ITimeDependent>();
             void Update()
@@ -46,8 +61,6 @@ namespace TextQuest
             }
         }
 
-        const int ExpForLevel = 1000;
-
         public interface IHaveInfo
         {
             string Title { get; }
@@ -57,7 +70,7 @@ namespace TextQuest
 
         public static Random rnd = new Random();
 
-        public abstract class Character : IHaveInfo
+        public abstract class Character : HaveLevel, IHaveInfo
         {
             public string Name;
             public virtual string Title => "Персонаж";
@@ -67,12 +80,7 @@ namespace TextQuest
             public int Power;
             public Weapon Weapon;
             public Armor Armor;
-            public int Exp;
             public readonly Effects Effects = new Effects();
-            public int Level
-            {
-                get => Exp / ExpForLevel;
-            }
             public int Speed;
         }
 
@@ -135,7 +143,7 @@ namespace TextQuest
             public Hero()
             {
                 Bag = new Bag(100);
-                Exp = 0;
+                Expire = 0;
                 Speed = 10;
             }
             public override string Title => "Герой";
@@ -211,9 +219,9 @@ namespace TextQuest
             public int Accuracy;
         }
 
-        public interface Event : IHaveInfo
+        public interface WeatherEvent : IHaveInfo, IEvent
         {
-            void ItsHappend();
+
         }
     }
 }
