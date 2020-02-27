@@ -4,3 +4,9 @@ C:\Users\s.anisimov\source\repos\TextQuest\TextQuest\bin\Debug\TextQuest.pdb
 C:\Users\s.anisimov\source\repos\TextQuest\TextQuest\obj\Debug\TextQuest.csprojAssemblyReference.cache
 C:\Users\s.anisimov\source\repos\TextQuest\TextQuest\obj\Debug\TextQuest.exe
 C:\Users\s.anisimov\source\repos\TextQuest\TextQuest\obj\Debug\TextQuest.pdb
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Debug\TextQuest.exe.config
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Debug\TextQuest.exe
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Debug\TextQuest.pdb
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Debug\TextQuest.csprojAssemblyReference.cache
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Debug\TextQuest.exe
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Debug\TextQuest.pdb

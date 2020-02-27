@@ -1,1 +1,6 @@
 C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Release\TextQuest.csprojAssemblyReference.cache
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Release\TextQuest.exe.config
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Release\TextQuest.exe
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\bin\Release\TextQuest.pdb
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Release\TextQuest.exe
+C:\Users\s.anisimov\source\repos\TextQuestCode\TextQuest\obj\Release\TextQuest.pdb

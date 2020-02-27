@@ -3,18 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TextQuest.Game;
 
 namespace TextQuest
 {
     class BaseData
     {
-        public abstract class HaveLevel
+        public enum ItemType
         {
-            public int Expire;
-            public int Level
-            {
-                get => Expire / 5000;
-            }
+            Item,
+            Weapon,
+            Armor,
+            Food,
+            Artefact,
+            OtherItem,
+        }
+
+        public abstract class Existence
+        {
+            public bool isAlive = true;
+            public readonly Effects Effects = new Effects();
+        }
+
+        public interface IStartAndEnd
+        {
+            void Run();
+            void Stop();
         }
 
         public interface ITimeDependent
@@ -22,10 +36,9 @@ namespace TextQuest
             void NewDay();
         }
 
-        public interface IEvent
+        public interface IEvent : IHaveInfo, IStartAndEnd
         {
             bool ItsHappend();
-            void Execute();
         }
 
         public interface Magic : IHaveInfo
@@ -33,13 +46,9 @@ namespace TextQuest
             void Use();
         }
 
-        public interface IEffect : IHaveInfo
-        {
-            void Run();
-            void Stop();
-        }
+        public interface IEffect : IHaveInfo, IStartAndEnd { }
 
-        public interface TimeEffect : IEffect, ITimeDependent
+        public interface ITimeEffect : IEffect, ITimeDependent
         {
             bool Condition();
         }
@@ -51,7 +60,7 @@ namespace TextQuest
 
         public class DayCircle
         {
-            List<ITimeDependent> TimeDependents = new List<ITimeDependent>();
+            readonly List<ITimeDependent> TimeDependents = new List<ITimeDependent>();
             void Update()
             {
                 for (int i = 0; i < TimeDependents.Count; i++)
@@ -64,24 +73,30 @@ namespace TextQuest
         public interface IHaveInfo
         {
             string Title { get; }
-            //string Rank() { get; set; }
-            //string About() { get; }
+            string Rank { get; }
+            string About { get; }
+            string ToString();
         }
 
         public static Random rnd = new Random();
 
-        public abstract class Character : HaveLevel, IHaveInfo
+        public abstract class Character : Existence, IHaveInfo
         {
-            public string Name;
-            public virtual string Title => "Персонаж";
+            public virtual string Title => "Незнакомец";
+            public virtual string Rank => "Неизвестно";
+            public virtual string About => "Неизвестно";
             public int Health;
             public abstract void GetDamage(Damage damage);
             public abstract void Die();
             public int Power;
             public Weapon Weapon;
             public Armor Armor;
-            public readonly Effects Effects = new Effects();
             public int Speed;
+            public int Expire;
+            public int Level
+            {
+                get => Expire / 5000;
+            }
         }
 
         public abstract class Armor : Item
@@ -107,22 +122,27 @@ namespace TextQuest
 
         public class Damage
         {
-            public Damage(Range physic = null, Range fire = null, Range frost = null, Range poisen = null)
+            public enum Types
             {
-                Physic = physic;
-                Fire = fire;
-                Frost = frost;
-                Poisen = poisen;
+                Physic,
+                Fire,
+                Frost,
+                Poisen
             }
-            public Range Physic;
-            public Range Fire;
-            public Range Frost;
-            public Range Poisen;
+            public Damage(Types type, Range damage_points, string comment = "")
+            {
+                Type = type;
+                Points = damage_points;
+                Comment = comment;
+            }
+            public Types Type;
+            public Range Points;
+            public string Comment;
         }
 
-        public abstract class NPC
+        public interface NPC
         {
-            public abstract void StartDialog(TextsBase.Dialogs.IDialog Dialog);
+            void StartDialog(TextsBase.Dialogs.IDialog Dialog);
         }
 
         public class Enemy : Character
@@ -134,24 +154,10 @@ namespace TextQuest
 
             public override void GetDamage(Damage damage)
             {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class Hero : Character
-        {
-            public Hero()
-            {
-                Bag = new Bag(100);
-                Expire = 0;
-                Speed = 10;
-            }
-            public override string Title => "Герой";
-            public readonly Bag Bag;
-            override public void GetDamage(Damage damage) { }
-            public override void Die()
-            {
-                throw new NotImplementedException();
+                int pain = damage.Points.RandomValue;
+                Health -= (Health - pain < 0) ? Health : pain;
+                Print($"{this.Title} получает {pain} урона{damage.Comment}");
+                if (Health == 0) Die();
             }
         }
 
@@ -161,54 +167,105 @@ namespace TextQuest
             void Use(Character character);
         }
 
-        public class Scroll : Item
+        public class Artefact : Item
         {
-        
+            public override string Title => "Неизвестный предмет";
         }
 
         public class Food : Item
-        { 
-        
+        {
+            public override string Title => "Пища";
         }
 
         abstract public class Item : IHaveInfo
         {
             public int Weight;
-            public string Name;
-            public string ClassName;
             public virtual string Title => "Предмет";
+            public virtual string Rank => "Неизвестно";
+            public virtual string About => "Неизвестно";
+        }
+
+        abstract public class ItemOther : Item
+        {
+            public override string Title => "Предмет";
         }
 
         public class Bag : List<Item>
         {
             public new bool Add(Item item)
             {
-                if (item.Weight <= this.FreeWeight)
+                if (item.Weight <= FreeWeight)
                 {
                     base.Add(item);
+                    Print($"{item.Title} добавлен в сумку");
                     return true;
                 }
                 else
                 {
+                    Print($"{item.Title} не добавлен в сумку");
+                    Print($"Недостаточно места");
                     return false;
                 }
+            }
+            public void View(IEnumerable<Item> items = null)
+            {
+                items = items ?? this.AsEnumerable(); 
+                Print("Содержимое сумки:");
+                for (int i = 0; i < items.Count(); i++)
+                {
+                    Print($"{i} : {items.ElementAt(i).Title}");
+                }
+                Print();
             }
             public Bag(int Max_Weight) => MaxWeight = Max_Weight;
             public int MaxWeight;
             public int ItemsWeight => this.Sum(x => x.Weight);
             public int FreeWeight => MaxWeight - ItemsWeight;
-            public void RemoveDialog()
-            { 
-                
-            }
-            public IEnumerable<Weapon> GetWeapons()
+            public Item SelectDialog(ItemType itemtype = ItemType.Item, bool Cancel = true)
             {
-                return this.Where(x => x is Weapon).Select(x => x as Weapon);
+                IEnumerable<Item> items = null;
+                switch (itemtype)
+                {
+                    case ItemType.Item: items = this.AsEnumerable(); break;
+                    case ItemType.Armor: items = GetArmors(); break;
+                    case ItemType.Artefact: items = GetArtefacts(); break;
+                    case ItemType.Food: items = GetFoods(); break;
+                    case ItemType.OtherItem: items = GetOtherItems(); break;
+                    case ItemType.Weapon: items = GetWeapons(); break;
+                    default: throw new Exception($"Не найден тип");
+                }
+                View(items);
+                if (items.Count() == 0)
+                {
+                    Print("<Пусто>");
+                    return null;
+                }
+                else
+                {
+                    if (Cancel == true) Print($"{items.Count()} : <ОТМЕНА>");
+                    int x = Input.Integer(0, items.Count() + (Cancel ? 1 : 0));
+                    if (x == items.Count()) return null;
+                    return items.ElementAt(x);
+                }
             }
-            public IEnumerable<Armor> GetArmors()
+            public void RemoveDialog(Item item, string question = "Выбросить")
             {
-                return this.Where(x => x is Armor).Select(x => x as Armor);
+                Print($"{question} {item.Title}?");
+                if (Dialogs.YesNo())
+                {
+                    Print($"{item.Title} удален из сумки");
+                    this.Remove(item);
+                }
+                else
+                {
+                    Print($"{item.Title} не удален из сумки");
+                }
             }
+            public IEnumerable<Weapon> GetWeapons() => this.Where(x => x is Weapon).Select(x => x as Weapon);
+            public IEnumerable<Armor> GetArmors() => this.Where(x => x is Armor).Select(x => x as Armor);
+            public IEnumerable<Artefact> GetArtefacts() => this.Where(x => x is Artefact).Select(x => x as Artefact);
+            public IEnumerable<Food> GetFoods() => this.Where(x => x is Food).Select(x => x as Food);
+            public IEnumerable<ItemOther> GetOtherItems() => this.Where(x => x is ItemOther).Select(x => x as ItemOther);
         }
 
         public abstract class Weapon : Item
@@ -219,7 +276,7 @@ namespace TextQuest
             public int Accuracy;
         }
 
-        public interface WeatherEvent : IHaveInfo, IEvent
+        public interface IWeatherEvent : IHaveInfo, IEvent
         {
 
         }

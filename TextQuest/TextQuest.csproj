@@ -46,6 +46,7 @@
     <Compile Include="BaseData.cs" />
     <Compile Include="CharsData.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="ItemsData.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="Program.cs" />

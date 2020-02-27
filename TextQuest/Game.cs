@@ -3,33 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TextQuest.BaseData;
 
 namespace TextQuest
 {
     class Game
     {
-        public int day = 1;
-        public static string DayInfo(int day) => $"неделя: {day / 7}\nдень: {day % 7 + 1}";
-        public int way = 10000;
-
-        public interface Output
+        public interface IOutput
         {
-            void Print(string text);
+            void Print(string text = "");
             string Input();
         }
 
-        public Output GameConsole;
+        public void Initialization()
+        {
+            GameConsole = new Output.ConsoleOut();
+        }
+
+        public static class Dialogs
+        {
+            public static bool YesNo()
+            {
+                string result;
+                do
+                {
+                    GameConsole.Print("[0 - нет, 1 - да]");
+                    result = GameConsole.Input().Trim();
+                }
+                while (result != "0" && result != "1");
+                return result == "1";
+            }
+        }
+        public static void Print(string s = "") => GameConsole.Print(s);
+        private static IOutput GameConsole;
+        public static class Input
+        {
+            public static string StringNotEmpty(string text)
+            {
+                GameConsole.Print(text);
+                string s;
+                do
+                {
+                    s = GameConsole.Input();
+                }
+                while (s.Trim() == "");
+                return s;
+            }
+            public static string String(string text)
+            {
+                GameConsole.Print(text);
+                return String();
+            }
+            public static string String() => GameConsole.Input();
+            public static int Integer(int min, int max)
+            {
+                do
+                {
+                    GameConsole.Print("Выбирайте...");
+                    string s = GameConsole.Input();
+                    if (int.TryParse(s, out int x))
+                        if (min <= x && x <= max) return x;
+                    GameConsole.Print("Не верный ввод");
+                }
+                while (true);
+            }
+        }
 
         public void Start()
         {
-            var hero = new BaseData.Hero();
-            hero.Bag.Add(new WeaponsData.Sword());
-            hero.Weapon = (BaseData.Weapon)hero.Bag[0];
+            Initialization();
+            var hero = new CharsData.Hero();
             for (int i = 0; i < 100; i++)
             {
-                Console.WriteLine(hero.Bag[0].Name);
-                hero.Weapon.Hit();
-                Console.WriteLine("\n");
+                hero.Bag.Add(new WeaponsData.Sword());
+                hero.Bag.Add(new WeaponsData.Axe());
+            }
+            while (true)
+            {
+                Item item = hero.Bag.SelectDialog(ItemType.Food);
+                hero.Bag.Remove(item);
             }
             Console.ReadLine();
         }

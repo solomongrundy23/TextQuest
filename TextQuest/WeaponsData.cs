@@ -3,38 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TextQuest.BaseData;
 
 namespace TextQuest
 {
     class WeaponsData
     {
-        public class Sword : BaseData.Weapon
+        public class Sword : Weapon
         {
+            public override string Title => "Мечь";
             public Sword()
             {
-                Name = "Меч";
                 Weight = 5;
-                Damage = new BaseData.Damage(physic: new BaseData.Range(5, 10));
+                Damage = new Damage(Damage.Types.Physic, new Range(5, 10));
                 Accuracy = 60;
             }
             public override void Hit()
             {
-                Console.WriteLine(Damage.Physic.RandomValue);
+                Console.WriteLine(Damage.Points.RandomValue);
             }
         }
 
-        public class Axe : BaseData.Weapon
+        public class Axe : Weapon
         {
+            public override string Title => "Топор";
             public Axe()
             {
-                Name = "Топор";
                 Weight = 8;
-                Damage = new BaseData.Damage(physic: new BaseData.Range(5, 10));
+                Damage = new Damage(Damage.Types.Physic, new Range(5, 10));
                 Accuracy = 40;
             }
             public override void Hit() 
             {
-                Console.WriteLine(Damage.Physic.RandomValue);
+                Console.WriteLine(Damage.Points.RandomValue);
             }
         }
     }

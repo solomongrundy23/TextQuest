@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace TextQuest
 {
-    class ConsoleOut : Game.Output
+    public class Output
     {
-        public string Input() => Console.ReadLine();
-        public void Print(string text) => Console.WriteLine();
+        public class ConsoleOut : Game.IOutput
+        {
+            public string Input() => Console.ReadLine();
+            public void Print(string text = "") => Console.WriteLine(text);
+        }
     }
 }
