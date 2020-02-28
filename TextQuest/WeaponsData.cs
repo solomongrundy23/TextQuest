@@ -11,7 +11,7 @@ namespace TextQuest
     {
         public class Sword : Weapon
         {
-            public override string Title => "Мечь";
+            public override string Title => "Меч";
             public Sword()
             {
                 Weight = 5;

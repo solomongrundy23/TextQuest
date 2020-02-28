@@ -10,8 +10,16 @@ namespace TextQuest
     {
         public class ConsoleOut : Game.IOutput
         {
-            public string Input() => Console.ReadLine();
-            public void Print(string text = "") => Console.WriteLine(text);
+            public string Input()
+            {
+                Console.CursorVisible = true;
+                return Console.ReadLine();
+            }
+            public void Print(string text = "")
+            {
+                Console.CursorVisible = false;
+                Console.WriteLine(text);
+            }
         }
     }
 }

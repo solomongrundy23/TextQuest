@@ -22,16 +22,21 @@ namespace TextQuest
 
         public static class Dialogs
         {
-            public static bool YesNo()
+            private static string GetAnswer(string text, string variants = "")
+            {
+                if (variants != string.Empty) GameConsole.Print(text);
+                if (variants != string.Empty) GameConsole.Print(variants);
+                return GameConsole.Input().Trim();
+            }
+            public static bool YesNo(string text = "")
             {
                 string result;
                 do
                 {
-                    GameConsole.Print("[0 - нет, 1 - да]");
-                    result = GameConsole.Input().Trim();
+                    result = GetAnswer(text, "[0 - нет, 1 - да]");
+                    if (result == "0" || result == "1") return result == "1";
                 }
-                while (result != "0" && result != "1");
-                return result == "1";
+                while (true);
             }
         }
         public static void Print(string s = "") => GameConsole.Print(s);
@@ -80,8 +85,8 @@ namespace TextQuest
             }
             while (true)
             {
-                Item item = hero.Bag.SelectDialog(ItemType.Food);
-                hero.Bag.Remove(item);
+                Item item = hero.Bag.SelectDialog(ItemType.Weapon);
+                hero.Bag.RemoveDialog(item);
             }
             Console.ReadLine();
         }
