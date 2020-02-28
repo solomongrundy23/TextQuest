@@ -64,7 +64,7 @@ namespace TextQuest
             {
                 do
                 {
-                    GameConsole.Print("Выбирайте...");
+                    GameConsole.Print($"Ваш выбор [{min}-{max}]");
                     string s = GameConsole.Input();
                     if (int.TryParse(s, out int x))
                         if (min <= x && x <= max) return x;
@@ -78,15 +78,15 @@ namespace TextQuest
         {
             Initialization();
             var hero = new CharsData.Hero();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 hero.Bag.Add(new WeaponsData.Sword());
                 hero.Bag.Add(new WeaponsData.Axe());
             }
             while (true)
             {
-                Item item = hero.Bag.SelectDialog(ItemType.Weapon);
-                hero.Bag.RemoveDialog(item);
+                hero.WeaponSelector();
+                Print($"{hero.Weapon.Title} {hero.Weapon.Damage.ToString()}");
             }
             Console.ReadLine();
         }

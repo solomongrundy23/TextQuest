@@ -89,6 +89,7 @@ namespace TextQuest
             public abstract void GetDamage(Damage damage);
             public abstract void Die();
             public int Power;
+            public NativeWeapon NativeWeapon;
             public Weapon Weapon;
             public Armor Armor;
             public int Speed;
@@ -107,8 +108,8 @@ namespace TextQuest
 
         public class Range
         {
-            int Min;
-            int Max;
+            public int Min;
+            public int Max;
             public Range(int min, int max)
             {
                 Min = min;
@@ -118,6 +119,7 @@ namespace TextQuest
             {
                 get => rnd.Next(Max - Min + 1) + Min;
             }
+            public string ToString() => $"[{Min}-{Max}]";
         }
 
         public class Damage
@@ -129,6 +131,17 @@ namespace TextQuest
                 Frost,
                 Poisen
             }
+            public string GetTypeString()
+            {
+                switch (Type)
+                {
+                    case Types.Fire: return "Огнём";
+                    case Types.Frost: return "От холода";
+                    case Types.Physic: return "Обычный";
+                    case Types.Poisen: return "От отравления";
+                    default: throw new Exception("Нет такого урона");
+                }
+            }
             public Damage(Types type, Range damage_points, string comment = "")
             {
                 Type = type;
@@ -138,6 +151,13 @@ namespace TextQuest
             public Types Type;
             public Range Points;
             public string Comment;
+            public new string ToString() => $"Урон {GetTypeString()} {Points.ToString()}";
+            public int Do()
+            {
+                int damage = Points.RandomValue;
+                Print($"Урон {GetTypeString()} {damage}");
+                return damage;
+            }
         }
 
         public interface NPC
@@ -202,9 +222,20 @@ namespace TextQuest
                 }
                 else
                 {
-                    Print($"{item.Title} не добавлен в сумку");
-                    Print($"Недостаточно места");
-                    return false;
+                    Print($"Недостаточно места для добавления {item.Title}");
+                    while (true)
+                    {
+                        if (Dialogs.YesNo("Освободить место?"))
+                        {
+                            Item remove = SelectDialog(Cancel: true);
+                            if (remove != null) RemoveDialog(remove);
+                            return Add(item);
+                        }
+                        else
+                        { 
+                            if (Dialogs.YesNo($"Выбросить {item.Title}?")) return false;
+                        }
+                    }
                 }
             }
             public void View(IEnumerable<Item> items = null)
@@ -243,7 +274,7 @@ namespace TextQuest
                 else
                 {
                     if (Cancel == true) Print($"{items.Count()} : <ОТМЕНА>");
-                    int x = Input.Integer(0, items.Count() + (Cancel ? 1 : 0));
+                    int x = Input.Integer(0, items.Count() - (!Cancel ? 1 : 0));
                     if (x == items.Count()) return null;
                     return items.ElementAt(x);
                 }
@@ -271,9 +302,15 @@ namespace TextQuest
         public abstract class Weapon : Item
         {
             public override string Title => "Оружие";
-            public virtual void Hit() { }
+            public virtual void Hit(Character targer) { }
             public Damage Damage;
-            public int Accuracy;
+            public int? Accuracy;
+            public readonly bool Native = false;
+        }
+
+        public abstract class NativeWeapon : Weapon
+        {
+            public new readonly bool Native = true;
         }
 
         public interface IWeatherEvent : IHaveInfo, IEvent

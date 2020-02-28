@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\s.anisimov\AppData\Local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\s.anisimov\AppData\Local\JetBrains\Rider2020.1\resharper-host\Local\Transient\ReSharperHost\v201\SolutionCaches\_TextQuest.1696420479.00" t="ExcludeRecursive" />
+    <e p="C:\Users\s.anisimov\source\repos\TextQuestCode" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="TextQuest" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="BaseData.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CharsData.cs" t="Include" />
+        <e p="Fight.cs" t="Include" />
+        <e p="Game.cs" t="Include" />
+        <e p="ItemsData.cs" t="Include" />
+        <e p="Main.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Output.cs" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="TextQuest.csproj" t="IncludeRecursive" />
+        <e p="TextsBase.cs" t="Include" />
+        <e p="WeaponsData.cs" t="Include" />
+      </e>
+      <e p="TextQuest.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
