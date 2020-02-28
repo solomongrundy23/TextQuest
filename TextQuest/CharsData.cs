@@ -58,8 +58,27 @@ namespace TextQuest
         }
 
         public class Ork : Enemy
-        { 
-            
+        {
+            public override string Title => "Орк";
+            public Ork()
+            {
+                Expire = 0;
+                Speed = 10;
+                Health = 10;
+                NativeWeapon = new WeaponsData.Fists();
+            }
+        }
+
+        public class Troll : Enemy
+        {
+            public override string Title => "Тролль";
+            public Troll()
+            {
+                Expire = 0;
+                Speed = 3;
+                Health = 100;
+                NativeWeapon = new WeaponsData.Fists();
+            }
         }
     }
 }

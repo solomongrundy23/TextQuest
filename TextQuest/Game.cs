@@ -77,17 +77,11 @@ namespace TextQuest
         public void Start()
         {
             Initialization();
-            var hero = new CharsData.Hero();
-            for (int i = 0; i < 10; i++)
-            {
-                hero.Bag.Add(new WeaponsData.Sword());
-                hero.Bag.Add(new WeaponsData.Axe());
-            }
-            while (true)
-            {
-                hero.WeaponSelector();
-                Print($"{hero.Weapon.Title} {hero.Weapon.Damage.ToString()}");
-            }
+            var c1 = new CharsData.Ork();
+            c1.Weapon = new WeaponsData.Sword();
+            var c2 = new CharsData.Troll();
+            var fight = new Fight(c1, c2);
+            fight.Process();
             Console.ReadLine();
         }
     }

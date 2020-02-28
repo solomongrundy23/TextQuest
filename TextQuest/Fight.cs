@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static TextQuest.BaseData;
+using static TextQuest.Game;
 
 namespace TextQuest
 {
@@ -20,7 +21,7 @@ namespace TextQuest
 
         public void Process()
         {
-            while (true)
+            while (A.isAlive && B.isAlive)
             {
                 if (A.Speed < B.Speed)
                 {
@@ -48,6 +49,7 @@ namespace TextQuest
 
         public void Step(Character ch, Character target)
         {
+            Print($"Ход персонажа {ch.Title}");
             ch.Weapon.Hit(target);
         }
     }

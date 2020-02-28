@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static TextQuest.BaseData;
+using static TextQuest.Game;
 
 namespace TextQuest
 {
@@ -18,9 +19,10 @@ namespace TextQuest
                 Damage = new Damage(Damage.Types.Physic, new Range(1, 3));
                 Accuracy = null;
             }
-            public override void Hit(Character targer)
+            public override void Hit(Character target)
             {
-                Console.WriteLine(Damage.Points.RandomValue);
+                Print($"Бьёт персонажа {target.Title} голыми руками");
+                target.GetDamage(Damage);
             }
         }
 
@@ -30,12 +32,13 @@ namespace TextQuest
             public Sword()
             {
                 Weight = 5;
-                Damage = new Damage(Damage.Types.Physic, new Range(2, 10));
+                Damage = new Damage(Damage.Types.Physic, new Range(2, 10), "от меча");
                 Accuracy = 80;
             }
-            public override void Hit(Character targer)
+            public override void Hit(Character target)
             {
-                Console.WriteLine(Damage.Points.RandomValue);
+                Print($"Бьёт персонажа {target.Title} мечом");
+                target.GetDamage(Damage);
             }
         }
 
@@ -48,9 +51,10 @@ namespace TextQuest
                 Damage = new Damage(Damage.Types.Physic, new Range(6, 10));
                 Accuracy = 60;
             }
-            public override void Hit(Character Target) 
+            public override void Hit(Character target)
             {
-                Console.WriteLine(Damage.Points.RandomValue);
+                Print($"Бьёт персонажа {target.Title} топором");
+                target.GetDamage(Damage);
             }
         }
     }

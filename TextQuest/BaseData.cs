@@ -90,7 +90,12 @@ namespace TextQuest
             public abstract void Die();
             public int Power;
             public NativeWeapon NativeWeapon;
-            public Weapon Weapon;
+            public Weapon Weapon
+            {
+                get => weapon ?? NativeWeapon;
+                set => weapon = value;
+            }
+            private Weapon weapon;
             public Armor Armor;
             public int Speed;
             public int Expire;
@@ -165,18 +170,19 @@ namespace TextQuest
             void StartDialog(TextsBase.Dialogs.IDialog Dialog);
         }
 
-        public class Enemy : Character
+        public abstract class Enemy : Character
         {
             public override void Die()
             {
-                throw new NotImplementedException();
+                Print($"{Title} умирает");
+                isAlive = false;
             }
 
             public override void GetDamage(Damage damage)
             {
                 int pain = damage.Points.RandomValue;
                 Health -= (Health - pain < 0) ? Health : pain;
-                Print($"{this.Title} получает {pain} урона{damage.Comment}");
+                Print($"{this.Title} получает {pain} урона {damage.Comment} остаётся здоровья {Health}");
                 if (Health == 0) Die();
             }
         }
