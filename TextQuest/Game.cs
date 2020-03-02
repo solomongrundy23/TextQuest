@@ -17,7 +17,7 @@ namespace TextQuest
 
         public void Initialization()
         {
-            GameConsole = new Output.ConsoleOut();
+            GameConsole = new Output.ConsoleWithTextLog();
         }
 
         public static class Dialogs
@@ -74,15 +74,16 @@ namespace TextQuest
             }
         }
 
-        public void Start()
+        public async void Start()
         {
             Initialization();
             var c1 = new CharsData.Ork();
             c1.Weapon = new WeaponsData.Sword();
             var c2 = new CharsData.Troll();
+            c2.Weapon = new WeaponsData.Axe();
             var fight = new Fight(c1, c2);
-            fight.Process();
-            Console.ReadLine();
+            await fight.StartAsync();
+            while (true) { }
         }
     }
 }

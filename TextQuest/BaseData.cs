@@ -157,12 +157,6 @@ namespace TextQuest
             public Range Points;
             public string Comment;
             public new string ToString() => $"Урон {GetTypeString()} {Points.ToString()}";
-            public int Do()
-            {
-                int damage = Points.RandomValue;
-                Print($"Урон {GetTypeString()} {damage}");
-                return damage;
-            }
         }
 
         public interface NPC

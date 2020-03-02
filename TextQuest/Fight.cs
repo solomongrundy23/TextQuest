@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static TextQuest.BaseData;
 using static TextQuest.Game;
@@ -19,10 +20,14 @@ namespace TextQuest
             A = a; B = b;
         }
 
-        public void Process()
+        public async Task StartAsync() => await Task.Run(() => Start());
+
+        public void Start()
         {
+            int Circle = 0;
             while (A.isAlive && B.isAlive)
             {
+                Print($"Ход {++Circle}");
                 if (A.Speed < B.Speed)
                 {
                     Step(B, A);
@@ -39,7 +44,12 @@ namespace TextQuest
                     else
                         break;
                 }
+                Print();
+                Thread.Sleep(rnd.Next(1000, 3000));
             }
+            if (A.isAlive && B.isAlive) throw new Exception("Так не может быть, один должен умиреть");
+            else
+            if (!(A.isAlive && B.isAlive)) Print($"Нет победителей");
         }
 
         public void HeroStep(Character ch, Character target)

@@ -64,7 +64,7 @@ namespace TextQuest
             {
                 Expire = 0;
                 Speed = 10;
-                Health = 10;
+                Health = 40;
                 NativeWeapon = new WeaponsData.Fists();
             }
         }
@@ -76,7 +76,7 @@ namespace TextQuest
             {
                 Expire = 0;
                 Speed = 3;
-                Health = 100;
+                Health = 50;
                 NativeWeapon = new WeaponsData.Fists();
             }
         }
